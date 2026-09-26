@@ -66,6 +66,20 @@ public class Academia {
         return sumaDivisores == numero;
     }
 
+
+    public double calcularIngresosPeriodo(String fechaInicio, String fechaFin) {
+        double acumulado = 0.0;
+
+        for (Matricula m : matriculas) {
+            String fechaMatricula = m.getFechaInicio();
+
+            if (fechaMatricula != null && fechaMatricula.compareTo(fechaInicio) >= 0 && fechaMatricula.compareTo(fechaFin) <= 0) {
+                acumulado += m.calcularValorTotal();
+            }
+        }
+        return acumulado;
+    }
+
     public double calcularIngresosTotales() {
         double acumulado = 0.0;
         for (Matricula m : matriculas) {
@@ -93,5 +107,4 @@ public class Academia {
     public String getNombreComercial() {
         return nombreComercial;
     }
-
 }

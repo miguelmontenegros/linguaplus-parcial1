@@ -40,6 +40,7 @@ public class LinguaPlusController {
                 "Inglés Básico A1", "Inglés Intensivo B2", "Francés Personalizado C1"
         ));
         cmbModalidad.setItems(FXCollections.observableArrayList("Presencial", "Virtual"));
+        cmbModalidad.setValue("Presencial");
 
         listaMatriculas = FXCollections.observableArrayList();
         tblMatriculas.setItems(listaMatriculas);
@@ -57,6 +58,7 @@ public class LinguaPlusController {
             String doc = txtDocumento.getText();
             String tel = txtTelefono.getText();
             String progNom = cmbPrograma.getValue();
+            String modalidad = cmbModalidad.getValue();
             String descTexto = txtDescuento.getText();
 
             double desc = 0.0;
@@ -74,6 +76,16 @@ public class LinguaPlusController {
                 }
             }
 
+            FabricaModalidad fabrica;
+            if ("Virtual".equalsIgnoreCase(modalidad)) {
+                fabrica = new FabricaVirtual();
+            } else {
+                fabrica = new FabricaPresencial();
+            }
+
+            ServicioEntregaModalidad servicioEntrega = new ServicioEntregaModalidad();
+            String infoModalidad = servicioEntrega.prepararPaquete(fabrica);
+
             Matricula matricula = new Matricula.Builder()
                     .conEstudiante(est)
                     .conPrograma(seleccionado)
@@ -86,7 +98,7 @@ public class LinguaPlusController {
             listaMatriculas.add(matricula);
 
             lblMensaje.setStyle("-fx-text-fill: green;");
-            lblMensaje.setText("Matrícula #" + matricula.getNumeroMatricula() + " registrada exitosamente.");
+            lblMensaje.setText("Matrícula #" + matricula.getNumeroMatricula() + " (" + modalidad + ") registrada. Paquete: " + infoModalidad);
 
         } catch (Exception e) {
             lblMensaje.setStyle("-fx-text-fill: red;");
